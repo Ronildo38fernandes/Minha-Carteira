@@ -13,7 +13,7 @@ declare module 'styled-components'{
 
                                     sucess:string;
                                     info:string;
-                                    warnig:string;
+                                    warning:string;
                         },
             }
 }
