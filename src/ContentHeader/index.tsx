@@ -1,14 +1,16 @@
 import React from "react";
-import { Container,Title,Controllers } from "./style";
+import { Container,Controllers, TitleContainer } from "./style";
+
 const ContentHeader : React.FC = () =>{
             return(
             
             <Container>
-                   <Title>
+                   <TitleContainer>
                         <h1>Título</h1>
-                   </Title>   
+                   </TitleContainer>   
                    <Controllers>
-                               <button type="button">Botão</button>
+                               <button type="button">Botão A</button>
+                               <button type="button">Botão B</button>
 
                    </Controllers>
             </Container>
