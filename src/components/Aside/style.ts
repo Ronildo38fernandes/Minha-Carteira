@@ -6,6 +6,23 @@ export const Container = styled.div`
  background-color: ${props => props.theme.colors.secondary};
  padding: 20px;
  border-right: 1px solid ${props => props.theme.colors.gray};
+
+a{
+            color: ${props =>props.theme.info};
+            text-decoration: none;
+            margin: 7px 0;
+            display: flex;
+            align-items: center;
+            &:hover{
+                        opacity: .7;
+            }
+            >svg{
+                        font-size:18px;
+                        margin-right:5px;
+            }
+
+}
+
 `;
 export const Header  = styled.header`
  height: 70px;
