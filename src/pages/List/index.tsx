@@ -7,6 +7,8 @@ import { useParams } from "react-router-dom";
 import gains from "../../repositores/gains";
 import expenses from "../../repositores/expenses";
 import { match } from "assert";
+import formatCurrency from "../../utils/formatCurrency";
+import formatDate from "../../utils/formatDate"
 
 
 
@@ -57,10 +59,10 @@ const List : React.FC = () =>{
                 return {
                   id:String( Math.random() * listaData.length),
                   description : item.description,
-                  amountFormatted:item.amount,
+                  amountFormatted:formatCurrency(Number(item.amount)),
                   frequency:item.frequency,
-                  dataFormatted: item.date,
-                  tagColor:item.frequency==='recorrente'? '#4e41f0':'#CC2A2C'  
+                  dataFormatted: formatDate(item.date),
+                  tagColor:item.frequency==='recorrente'? '#4e41f0':'#E67846' 
                 };
               });
               
