@@ -26,7 +26,11 @@ interface IDate{
 
 
 const List : React.FC = () =>{
-           
+
+
+
+            const [monthSelected,setMonthSelected] = useState<string>(String(new Date().getMonth() +1 ));
+            const [yearSelected,setYearSelected] = useState<string>(String(new Date().getFullYear()));         
             const { type } = useParams();
             const titleOptions = useMemo(() => {
                  return type === 'balance-entry'
@@ -37,17 +41,26 @@ const List : React.FC = () =>{
             const [data,setData] =useState<IDate[]>([]);
                   
             const months = [
+                        {value: 1,    label: 'janeiro'},
+                        {value: 2,    label: 'fevereiro'},
+                        {value: 3,    label: 'março'},
                         {value: 4,  label: 'Abril'},
-                        {value: 5,    label: 'Maio'},
+                        {value: 5,    label: 'maio'},
                         {value: 6,  label: 'Junho'},
+                        {value: 7,    label: 'julho'},
+                        {value: 8,    label: 'agosto'},
+                        {value: 9,    label: 'setembro'},
+                        {value: 10,    label: 'outubro'},
+                        {value: 11,    label: 'novembro'},
+                        {value: 12,    label: 'desembro'},
                    ]
 
             const yaers = [
-              {value: 2022,  label: 2022},
               {value: 2021,    label: 2021},
+              {value: 2019,  label: 2019},
               {value: 2020,  label: 2020},
                  ]       
-
+ 
             
             const listaData = useMemo(()=> {
               return type === 'balance-entry'? gains : expenses},[type])
@@ -55,9 +68,19 @@ const List : React.FC = () =>{
             
             useEffect(()=>{
                
-             const response = listaData.map((item) =>{
-                return {
-                  id:String( Math.random() * listaData.length),
+             const filteredData = listaData.filter((item) =>{
+                
+              const date = new Date(item.date);
+              const month = String (date.getMonth() +1) ;
+              const year = String (date.getFullYear());
+
+              return month === monthSelected && year === yearSelected;
+            });  
+              
+             const formattedData = filteredData.map(item => {  
+              return {
+                  //:String( Math.random() * listaData.length)
+                  id:String(new Date().getTime()) + item.amount,
                   description : item.description,
                   amountFormatted:formatCurrency(Number(item.amount)),
                   frequency:item.frequency,
@@ -66,14 +89,14 @@ const List : React.FC = () =>{
                 };
               });
               
-              setData(response);
+              setData(formattedData);
 
-            },[type])
+            },[type,listaData,monthSelected,yearSelected])
             return(
              <Container>           
                <ContentHeader title={titleOptions.title} lineColor={titleOptions.lineColor}>
-                  <SelectInput options={months} />
-                  <SelectInput options={yaers} />
+                  <SelectInput options={months} onChange= {(e)=>setMonthSelected(e.target.value)} defaultValue={monthSelected} />
+                  <SelectInput options={yaers} onChange= {(e)=>setYearSelected(e.target.value)}   defaultValue={yearSelected}/>
                </ContentHeader>
                
                
