@@ -8,9 +8,9 @@ import gains from "../../repositores/gains";
 import expenses from "../../repositores/expenses";
 import { match } from "assert";
 import formatCurrency from "../../utils/formatCurrency";
-import formatDate from "../../utils/formatDate"
-
-
+import formatDate from "../../utils/formatDate";
+import listOfMonths from '../../utils/months';
+import {uuid} from 'uuidv4';
 
 
 interface IDate{
@@ -40,7 +40,7 @@ const List : React.FC = () =>{
             
             const [data,setData] =useState<IDate[]>([]);
                   
-            const months = [
+  /*           const months = [
                         {value: 1,    label: 'janeiro'},
                         {value: 2,    label: 'fevereiro'},
                         {value: 3,    label: 'março'},
@@ -53,14 +53,15 @@ const List : React.FC = () =>{
                         {value: 10,    label: 'outubro'},
                         {value: 11,    label: 'novembro'},
                         {value: 12,    label: 'desembro'},
-                   ]
+                   ] */
 
-            const yaers = [
+       /*       const years = [
               {value: 2021,    label: 2021},
               {value: 2019,  label: 2019},
               {value: 2020,  label: 2020},
-                 ]       
- 
+                 ]   */      
+                
+           
             
             const listaData = useMemo(()=> {
               return type === 'balance-entry'? gains : expenses},[type])
@@ -92,11 +93,49 @@ const List : React.FC = () =>{
               setData(formattedData);
 
             },[type,listaData,monthSelected,yearSelected])
+            
+            const  months = useMemo(() => {
+             
+                return listOfMonths.map((month, index) =>{
+
+                  return{
+                    value: index +1 ,
+                    label: month ,
+                  }
+                })
+                
+             
+             
+            },[]);  
+            
+            
+            const  years = useMemo(() => {
+              let uniqueYaers: number[] = [];
+              
+              listaData.forEach(item => {
+                const date = new Date(item.date);
+                const year = date.getFullYear();
+
+                if(!uniqueYaers.includes(year)){
+                  uniqueYaers.push(year)
+                  console.log(uniqueYaers)
+                }
+                
+              });
+              return uniqueYaers.map(year => {
+                return{
+                  value: year,
+                  label: year,
+                }
+              });
+            },[listaData]);  
+              
+           
             return(
              <Container>           
                <ContentHeader title={titleOptions.title} lineColor={titleOptions.lineColor}>
                   <SelectInput options={months} onChange= {(e)=>setMonthSelected(e.target.value)} defaultValue={monthSelected} />
-                  <SelectInput options={yaers} onChange= {(e)=>setYearSelected(e.target.value)}   defaultValue={yearSelected}/>
+                  <SelectInput options={years} onChange= {(e)=>setYearSelected(e.target.value)}   defaultValue={yearSelected}/>
                </ContentHeader>
                
                
@@ -114,7 +153,7 @@ const List : React.FC = () =>{
            
                <Content>
                  
-                 {
+{                 
 
                    data.map( item => (
                    
@@ -126,8 +165,8 @@ const List : React.FC = () =>{
                    subtitle= {item.dataFormatted}
                    amount={item.amountFormatted}/>
                    ))  
-                 }     
-
+                 }      
+               
 
                </Content>
 
