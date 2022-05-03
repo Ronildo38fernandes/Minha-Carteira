@@ -28,8 +28,8 @@ const Aside : React.FC = () =>{
                                     </MenuItemLink>
                                     <MenuItemLink href='/list/balance-entry'>
                                                 <MdArrowUpward />
-                                                Entradas
-                                    </MenuItemLink>
+                                                Entradas 
+                                    </MenuItemLink> 
                                     <MenuItemLink href='/list/exit-balance'>
                                                 <MdArrowDownward />
                                                 Saídas

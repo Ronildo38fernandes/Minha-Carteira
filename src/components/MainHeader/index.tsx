@@ -1,5 +1,6 @@
 import { match } from "assert";
 import React,{useMemo} from "react";
+import { Button } from "react-bootstrap";
 import emojis from "../../utils/emojis";
 import Toggle from '../Toggle'
 import { Container, Profile, Welcome,UserName } from './style';
@@ -13,6 +14,7 @@ const emoji =useMemo(() => {
             return (
 
                         <Container>
+                                    
                                     <Toggle />
                                     <Profile>
                                                 <Welcome>Olá,{emoji}</Welcome>
@@ -21,6 +23,7 @@ const emoji =useMemo(() => {
 
 
                         </Container>
+                                    
 
             );
 }
