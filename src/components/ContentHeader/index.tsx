@@ -22,9 +22,14 @@ const ContentHeader : React.FC<IContentHeaderProps>  = ({
             return(
 
             <Container >
+
+
                    <TitleContainer lineColor={lineColor}>
                         <h1>{title}</h1>
                    </TitleContainer>   
+                    
+                    
+                   
                    <Controllers>
                                
                                {children}
@@ -36,3 +41,5 @@ const ContentHeader : React.FC<IContentHeaderProps>  = ({
             );
 }
 export default ContentHeader;
+
+//<button type="submit">+</button>

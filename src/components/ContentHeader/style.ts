@@ -12,7 +12,12 @@ export const  Container = styled.div`
             justify-content: space-between;
             margin-bottom: 25px;
 
-            
+            botaozinho. {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px; 
+            }
             
             `;
 export const  TitleContainer = styled.div<ITitleContainerProps>`
