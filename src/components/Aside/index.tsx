@@ -11,6 +11,7 @@ import { Container,
             MdArrowUpward,
             MdExitToApp
 } from  'react-icons/md';
+
 import logoimg from '../../assets/logo.svg' 
 const Aside : React.FC = () =>{
             return(
@@ -21,12 +22,12 @@ const Aside : React.FC = () =>{
                                     <Title> Minha carteira</Title> 
                         </Header>
                         <MenuContainer>
-
+                                      
                                     <MenuItemLink href='/dashboard'>
                                                 <MdDashboard />
                                                 Dashboard
                                     </MenuItemLink>
-                                    <MenuItemLink href='/list/balance-entry'>
+                                    <MenuItemLink href='/list/entry-balance'>
                                                 <MdArrowUpward />
                                                 Entradas 
                                     </MenuItemLink> 
@@ -38,7 +39,7 @@ const Aside : React.FC = () =>{
                                                 <MdExitToApp />
                                                 Sair
                                     </MenuItemLink>
-
+*
                         </MenuContainer>
             </Container>
 

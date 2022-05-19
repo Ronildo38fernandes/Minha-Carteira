@@ -41,5 +41,3 @@ const ContentHeader : React.FC<IContentHeaderProps>  = ({
             );
 }
 export default ContentHeader;
-
-//<button type="submit">+</button>

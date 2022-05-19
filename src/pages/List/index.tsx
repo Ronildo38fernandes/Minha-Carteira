@@ -1,16 +1,19 @@
-import React, {useMemo,useState,useEffect} from "react";
+
+
+import React, {useMemo,useState,useEffect,} from "react";
 import { Container,Content,Filters } from "./style";
 import ContentHeader from "../../components/ContentHeader";
 import SelectInput from "../../components/SelectInput";
 import HistoryFinanceCard from "../../components/HistoryFinanceCard";
-import { useParams } from "react-router-dom";
 import gains from "../../repositores/gains";
 import expenses from "../../repositores/expenses";
-import { match } from "assert";
+import { useParams } from "react-router-dom";
+
 import formatCurrency from "../../utils/formatCurrency";
 import formatDate from "../../utils/formatDate";
-import listOfMonths from '../../utils/months';
-import {uuid} from 'uuidv4';
+//import listOfMonths from '../../utils/months';
+import {listOfMonths} from '../../utils/months';
+
 
 
 interface IDate{
@@ -25,52 +28,123 @@ tagColor:string;
 
 const List : React.FC = () =>{
 
-          const [monthSelected,setMonthSelected] = useState<string>(String(new Date().getMonth() +1 ));
-          const [yearSelected,setYearSelected] = useState<string>(String(new Date().getFullYear()));
-          const[frequencyFilterSelected, setFrequencyFilterSelected] = useState(['recorrente','eventual']);         
-          const { movimentType } = useParams();
-        
-        /* const titleOptions = useMemo(() => {
-                return movimentType === 'balance-entry'
-                    ? { title: 'Entradas', lineColor: '#187D5F' }
-                      : { title: 'Saída', lineColor: '#CC2A2C' };
-                }, [movimentType]);
-          
-                
-                
-                const listaData = useMemo(()=> {
-                  return movimentType === 'balance-entry'? gains : expenses},[movimentType]);
-                  */
           const [data,setData] =useState<IDate[]>([]);            
-          const pageData = useMemo(()=> {
-            return movimentType === 'balance-entry' ? 
-            {
-              title :'Entradas',
+          const [monthSelected,setMonthSelected] = useState<number>(new Date().getMonth() +1 );
+          const [yearSelected,setYearSelected] = useState<number>(new Date().getFullYear());
+          const[frequencyFilterSelected, setFrequencyFilterSelected] = useState(['recorrente','eventual']);         
+         
+         const {movimentType}  = useParams();  
+          
+          
+           
+           const pageData = useMemo(() => {
+            
+            
+            return movimentType === 'entry-balance'
+              ? {
+                  title: 'Entradas',
+                  lineColor: '#4e41f0',
+                  data: gains,
+                }
+              : {
+                  title: 'Saídas',
+                  lineColor: '#e44c4e',
+                  data: expenses,
+                };
+          }, [movimentType]);
+        
+       /* 
+           const pageData = useMemo(()=> {
+            
+            
+            return movimentType === 'entry-balance'?{
+              title:'Entradas',              
               lineColor: '#187D5F',
-              data: gains
+              data:gains   
             }
             :{
               title :'Saidas',
               lineColor: '#CC2A2C',
-              data:expenses
-            }
+              data: expenses
+            } 
+            
           },[movimentType]);  
-
+          */
+         const  years = useMemo(() => {
+           let uniqueYaers: number[] = [];
+           
+           const {data} = pageData;
+           
+           data.forEach(item => {
+             const date = new Date(item.date);
+             const year = date.getFullYear();
+             
+             if(!uniqueYaers.includes(year)){
+               uniqueYaers.push(year)
+               
+             }
+             
+           });
+           return uniqueYaers.map(year => {
+             return{
+               value: year,
+               label: year,
+             }
+           });
+         },[data]);  
+         
+         
+         
+         const months = useMemo(() => {
+           return listOfMonths.map(item => {
+             return{
+               value: item.value,
+               label: item.label,
+              }
+            });
+          },[data]);
+          
+          const handleFrequencyClick = (frequency: string)=>{
+            const alreadySelected = frequencyFilterSelected.findIndex((item )=> item === frequency);
+            
+            if(alreadySelected >=0){
+              const filtered = frequencyFilterSelected.filter((item) => item !== frequency);
+              setFrequencyFilterSelected(filtered);
+             }else{
+               setFrequencyFilterSelected((prev) => [...prev,frequency]);
+             }
+             
+           }
+          const handleMonthSelected = (month: string) => {
+            try {
+              const parseMonth = Number (month);
+              setMonthSelected(parseMonth);
+            } catch  {
+              throw new Error("Valor do mês invalido. coloque um number")
+            }
+          }
+          const handleYearSelected = (yaer: string) => {
+            try {
+              const parseYaer = Number (yaer);
+              setYearSelected(parseYaer);
+            } catch  {
+              throw new Error("Valor do ano invalido. coloque um number")
+            }
+          }                  
           useEffect(()=>{
             const {data} = pageData; 
             const filteredData = data.filter((item) =>{
               
             const date = new Date(item.date);
-            const month = String (date.getMonth() +1) ;
-            const year = String (date.getFullYear());
-
+            const month =  date.getMonth() +1 ;
+            const year =  date.getFullYear();
+    
             return month === monthSelected && year === yearSelected && frequencyFilterSelected.includes(item.frequency);
           });  
             
-            const formattedData = filteredData.map(item => {  
+            const formattedData = filteredData.map((item) => {  
             return {
-                //:String( Math.random() * listaData.length)
-                id:String(new Date().getTime()) + item.amount,
+                id:String(Math.random() * data.length),
                 description : item.description,
                 amountFormatted:formatCurrency(Number(item.amount)),
                 frequency:item.frequency,
@@ -79,62 +153,17 @@ const List : React.FC = () =>{
               };
             });
             
-            setData(formattedData);
-
-          },[movimentType,pageData,monthSelected,yearSelected,frequencyFilterSelected])
-
-          const handleFrequencyClick = (frequency: string)=>{
-            const alreadySelected = frequencyFilterSelected.findIndex(item => item === frequency);
-
-            if(alreadySelected >=0){
-              const filtered = frequencyFilterSelected.filter(item => item !== frequency);
-              setFrequencyFilterSelected(filtered);
-            }else{
-              setFrequencyFilterSelected((prev) => [...prev,frequency]);
-            }
-
-          }
           
-          const  months = useMemo(() => {
-            
-              return listOfMonths.map((month, index) =>{
-
-                return{
-                  value: index +1 ,
-                  label: month ,
-                }
-              })
-                                        
-          },[]);  
-                      
-          const  years = useMemo(() => {
-            let uniqueYaers: number[] = [];
-
-            const {data} = pageData;
-            
-            data.forEach(item => {
-              const date = new Date(item.date);
-              const year = date.getFullYear();
-
-              if(!uniqueYaers.includes(year)){
-                uniqueYaers.push(year)
-                
-              }
-              
-            });
-            return uniqueYaers.map(year => {
-              return{
-                value: year,
-                label: year,
-              }
-            });
-          },[data]);  
-                        
+          setData(formattedData);
+          
+        },[movimentType,pageData,monthSelected,yearSelected,frequencyFilterSelected])
           return(
             <Container>           
               <ContentHeader title={pageData.title} lineColor={pageData.lineColor}>
-                <SelectInput options={months} onChange= {(e)=>setMonthSelected(e.target.value)} defaultValue={monthSelected} />
-                <SelectInput options={years} onChange= {(e)=>setYearSelected(e.target.value)}   defaultValue={yearSelected}/>
+                <SelectInput options={months} 
+                onChange= {(e)=>handleMonthSelected(e.target.value)} defaultValue={monthSelected} />
+                <SelectInput options={years} 
+                onChange= {(e)=>handleYearSelected(e.target.value)}   defaultValue={yearSelected}/>
               </ContentHeader>
               
               <Filters>
