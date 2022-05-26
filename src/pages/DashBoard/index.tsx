@@ -6,6 +6,8 @@ import expenses from "../../repositores/expenses";
 import gains from "../../repositores/gains";
 import WalletBox from "../../components/WalletBox";
 import MessangeBox from "../../components/MenssageBox";
+
+import PieChartBox from "../../components/PieChartBox";
 import happyImg from '../../assets/happy.svg'
 import sadImg from '../../assets/sad.svg'
 import { 
@@ -125,6 +127,29 @@ const menssage = useMemo(()=>{
   }
 },[totalExpenses,totalGains ]);
 
+const relationExpensesVersusGains = useMemo(() =>{
+  const total = totalGains + totalExpenses;
+  const gainsPercent =(totalGains/total) * 100;
+  const expensesPercent = (totalExpenses/total) * 100;
+
+  const data = [
+    {
+      name: "Entradas",
+      value:totalExpenses,
+      percent: Number(gainsPercent.toFixed(1)),
+      color: "#F7931B"
+    },
+    {
+      name: "Saídas",
+      value:totalExpenses,
+      percent: Number(expensesPercent.toFixed(1)),
+      color: "#E44C4E"
+    },
+  ];
+  return data;
+
+},[totalGains, totalExpenses])
+
  const handleMonthSelected = (month: string) => {
    try {
      const parseMonth = Number (month);
@@ -180,6 +205,7 @@ const menssage = useMemo(()=>{
                 footerText={menssage.footerText}
                 icon={menssage.icon}
                 />
+                <PieChartBox data={relationExpensesVersusGains} />
                </Content>
               
             </Container>

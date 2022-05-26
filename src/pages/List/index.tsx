@@ -33,25 +33,27 @@ const List : React.FC = () =>{
           const [yearSelected,setYearSelected] = useState<number>(new Date().getFullYear());
           const[frequencyFilterSelected, setFrequencyFilterSelected] = useState(['recorrente','eventual']);         
          
-         const {movimentType}  = useParams();  
           
           
-           
-           const pageData = useMemo(() => {
+          
+          
+          const {movimentType} = useParams();  
+          const pageData = useMemo(() => {
             
             
-            return movimentType === 'entry-balance'
+            return movimentType === 'exit-balance'
               ? {
-                  title: 'Entradas',
-                  lineColor: '#4e41f0',
-                  data: gains,
-                }
+                title: 'Saídas',
+                lineColor: '#e44c4e',
+                data: expenses,
+              }
               : {
-                  title: 'Saídas',
-                  lineColor: '#e44c4e',
-                  data: expenses,
+                title: 'Entradas',
+                lineColor: '#4e41f0',
+                data: gains,
                 };
           }, [movimentType]);
+        
         
        /* 
            const pageData = useMemo(()=> {
