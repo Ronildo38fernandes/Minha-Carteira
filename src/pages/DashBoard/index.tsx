@@ -6,7 +6,7 @@ import expenses from "../../repositores/expenses";
 import gains from "../../repositores/gains";
 import WalletBox from "../../components/WalletBox";
 import MessangeBox from "../../components/MenssageBox";
-
+import HistoryBox from "../../components/HistoryBox";
 import PieChartBox from "../../components/PieChartBox";
 import happyImg from '../../assets/happy.svg'
 import sadImg from '../../assets/sad.svg'
@@ -149,6 +149,46 @@ const relationExpensesVersusGains = useMemo(() =>{
   return data;
 
 },[totalGains, totalExpenses])
+const historyData = useMemo(() => {
+  return listOfMonths.map((_,month) => {
+    let amountEntry = 0 ;
+    gains.forEach(gain =>{
+      const date = new Date(gain.date);
+      const gainMonth = date.getMonth();
+      const gainYear = date.getFullYear();
+      if(gainMonth === month && gainYear ===yearSelected){
+        try {
+          
+          amountEntry += Number(gain.amount) ;
+        } catch  {
+          throw new Error('valor invalidos')
+        }
+      }
+    });
+    let amountOutput = 0 ;
+    expenses.forEach(expense =>{
+      const date = new Date(expense.date);
+      const expenseMonth = date.getMonth();
+      const expenseYear = date.getFullYear();
+      if(expenseMonth === month && expenseYear ===yearSelected){
+        try {
+          
+          amountOutput += Number(expense.amount) ;
+        } catch  {
+          throw new Error('valor invalidos')
+        }
+      }
+    });
+    return{
+      monthNumber : month,
+      month: listOfMonths[month],
+      amountEntry,
+      amountOutput
+
+    }
+
+  })
+},[]);
 
  const handleMonthSelected = (month: string) => {
    try {
@@ -206,6 +246,11 @@ const relationExpensesVersusGains = useMemo(() =>{
                 icon={menssage.icon}
                 />
                 <PieChartBox data={relationExpensesVersusGains} />
+                <HistoryBox 
+                  data={historyData}
+                  lineColorAmountEntry="#f7931b"
+                  lineColorAmountOutput="#e44c4e"
+                />
                </Content>
               
             </Container>
